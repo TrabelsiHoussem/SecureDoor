@@ -1,0 +1,293 @@
+//LCD Module Connections  
+#define LCD_RS_PIN      PIN_D1                                   
+#define LCD_RW_PIN      PIN_D2 
+#define LCD_ENABLE_PIN  PIN_D3 
+#define LCD_DATA4       PIN_D4                                    
+#define LCD_DATA5       PIN_D5                                    
+#define LCD_DATA6       PIN_D6                           
+#define LCD_DATA7       PIN_D7
+//End LCD Module Connections
+/*#define KEY0       PIN_C0                                  
+#define KEY1       PIN_C1
+#define KEY2       PIN_C2 
+#define KEY4       PIN_D4                                    
+#define KEY5       PIN_D5                                    
+#define KEY6       PIN_D6                           
+#define KEY7       PIN_D7
+ */
+#include <main.h>
+#fuses HS,NOWDT,NOPROTECT,NOLVP 
+#use delay (clock=8000000)
+#include <lcd.c>
+#define use_portb_kbd TRUE 
+#include <kbd.c>
+//void lcd_mostrar(void); 
+
+/*
+void main(void) 
+{ 
+port_b_pullups(TRUE); 
+kbd_init(); 
+lcd_init(); 
+lcd_mostrar(); 
+} 
+
+void lcd_mostrar(void) 
+{ 
+char c=0; 
+
+while(TRUE){               // Bucle infinito 
+   do{                     // Espera hasta... 
+      c=kbd_getc(); 
+   }while(c==0);           //...pulsar una tecla 
+
+   lcd_gotoxy(1,1); 
+   lcd_putc(c);            // Muestra tecla pulsada en lcd 
+   lcd_putc("\b");  
+} 
+
+} 
+
+
+*/
+
+char mp[12],monmp[11]="1234567890";
+int i=1;
+int1 p=0;
+int k=0;
+
+
+
+
+
+
+void main()
+{ port_b_pullups(TRUE); 
+  lcd_init();
+   kbd_init();
+   
+
+   lcd_putc("\fSarraDebbabi\nBinome");
+   delay_ms(3000);
+
+   lcd_putc("\f");
+   lcd_putc("Mot de passe:");
+   enable_interrupts(GLOBAL);
+   enable_interrupts(INT_TIMER0); //a verfier 
+   
+while(true){
+
+   while(!(mp[i]=kbd_getc()));
+
+   lcd_gotoxy(i,2);
+   lcd_putc(mp[i]);
+    if (i==10)
+      {i=0;
+       p=0;
+       lcd_gotoxy(1,2);
+       lcd_putc("\fVerification.. " ); 
+       delay_ms(1000);
+       for (i=0;i<10;i++)
+            {  lcd_gotoxy(1,1);
+               printf(lcd_putc,"%s",monmp[i]);
+               if (mp[i] != monmp[i-1]) 
+               {
+               p=1;
+               } 
+            }
+    
+    if ( p==0)
+        {output_high(pin_a0);
+        delay_ms(1000);
+         lcd_gotoxy(1,1); 
+         lcd_putc("\fmp correcte :)");
+         output_low(pin_a1);
+         }
+
+
+    if ( p==1)
+       {        
+        lcd_gotoxy(1,1);
+        lcd_putc("\fmp incorrecte!" );
+        delay_ms(1000);
+        output_high(pin_a1) ;
+        output_low(pin_a0);
+        lcd_gotoxy(1,1);
+        lcd_putc("\fmp incorrecte!" );
+        delay_ms(1000);
+        output_high(pin_a1) ;
+        output_low(pin_a0);
+        k++;
+        if(k==3){
+        lcd_putc("\fmp incorrecte!" );
+        delay_ms(1000);
+        lcd_putc("\f" );
+         delay_ms(1000);
+         lcd_putc("\fmp incorrecte!" );
+        delay_ms(1000);
+        lcd_putc("\f" );
+        output_high(pin_a2) ;
+        delay_ms(1000);
+        output_low(pin_a2) ;
+        delay_ms(1000);
+        output_high(pin_a2) ;
+        delay_ms(1000);
+        output_low(pin_a2) ;
+        delay_ms(1000);
+        output_high(pin_a2) ;
+        delay_ms(1000);
+        output_low(pin_a2) ;
+        }
+         
+        }
+    
+    
+    
+    
+    
+    
+   i=0;
+   p=0;
+    
+    }
+   i=i+1;
+  
+   
+
+
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+void main()
+{
+   int i=0;
+  
+   lcd_init();
+   kbd_init();
+   Delay_ms(100);
+   port_b_pullups(TRUE);
+   /*while(TRUE)
+   {
+     lcd_putc('\f'); //Clear Display
+     lcd_putc("Helloooo World");
+     Delay_ms(2000);
+     lcd_putc('\f'); //Clear Display
+     lcd_putc("Welcome To");
+     lcd_gotoxy(1,2);
+     lcd_putc("hhhhhhhh");
+     Delay_ms(2000);
+     lcd_putc('\f');
+     printf(lcd_putc,"Count = %d", i);
+     Delay_ms(2000);
+     i++;
+   }*/
+   
+//}
+
+/*
+char mp[10],monmp[12]="2603724911";
+int i=1;
+int1 p=0;
+void main()
+{
+  lcd_init();
+   kbd_init();
+   
+    //set_tris_A(0x01);
+
+lcd_putc("\fkbadaHaythem\nManitaHakim");
+delay_ms(3000);
+
+ lcd_putc("\f");
+   lcd_putc("Mot de passe:");
+   
+   enable_interrupts(INT_TIMER0); //a verfier 
+   enable_interrupts(GLOBAL);
+
+
+  
+   
+   while(!(mp[i]=kbd_getc()));
+
+   lcd_gotoxy(i,2);
+   lcd_putc(mp[i]);
+
+    
+    if (i==9)
+      {i=0;
+       p=0;
+       lcd_gotoxy(1,2);
+       lcd_putc("\fVerification.. " ); 
+       delay_ms(1000);
+       for (i=0;i<10;i++ )
+            {  lcd_gotoxy(1,1);
+               //printf(lcd_putc,"%s",monmp[i]);
+               if (mp[i] != monmp[i]) 
+               {
+               p=1;
+               } 
+            }
+    
+    if ( p==0)
+        {output_high(pin_d0);
+        delay_ms(1000);
+         lcd_gotoxy(1,1); 
+         lcd_putc("\fmp correcte :)");
+         output_high(pin_d0);
+         delay_ms(1000);
+         output_high(pin_d1);
+         }
+
+
+    if ( p==1)
+       {        lcd_gotoxy(1,1); 
+        lcd_putc("\fmp incorrecte!" );
+       output_high(pin_d2) ;
+        delay_ms(1000);
+        output_high(pin_d3) ;
+        delay_ms(1000);
+        output_low(pin_d3) ;
+
+         
+        }
+    
+   i=0;
+   p=0;
+    
+    }
+   i=i+1;
+  
+   
+
+
+
+
+}
+*/
+
+
+
+
+
+
+
+
+
+
